@@ -20,6 +20,8 @@ public class MainActivity extends AppCompatActivity {
 
     TextView textView;
 
+    EditText nameInput, idInput;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +29,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         database = FirebaseDatabase.getInstance();
+
+        nameInput = findViewById(R.id.nameTextID);
+        idInput = findViewById(R.id.idTextID);
+
         textView = findViewById(R.id.TV_ID);
 
 
@@ -35,10 +41,12 @@ public class MainActivity extends AppCompatActivity {
     public void buttonClicked(View view) {
 
 
-        EditText editText = findViewById(R.id.editTextID);
+        String childName = nameInput.getText().toString();
+        myRef = database.getReference("Users").child(childName);
 
-        myRef = database.getReference("Users");
-        myRef.child("Names").push().setValue(editText.getText().toString());
+        myRef.child("Name").setValue(nameInput.getText().toString());
+        myRef.child("ID").setValue(idInput.getText().toString());
+
 
     }
 
