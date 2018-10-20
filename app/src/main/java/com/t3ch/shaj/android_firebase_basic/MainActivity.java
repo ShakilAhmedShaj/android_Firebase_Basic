@@ -26,28 +26,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         database = FirebaseDatabase.getInstance();
-        myRef = database.getReference("message");
-
         textView = findViewById(R.id.TV_ID);
-
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                String value = dataSnapshot.getValue(String.class);
-
-                textView.setText(value);
-
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
 
 
     }
@@ -57,10 +37,8 @@ public class MainActivity extends AppCompatActivity {
 
         EditText editText = findViewById(R.id.editTextID);
 
-        String message = editText.getText().toString();
-
-        myRef.setValue(message);
-
+        myRef = database.getReference("Users");
+        myRef.child("Names").push().setValue(editText.getText().toString());
 
     }
 
