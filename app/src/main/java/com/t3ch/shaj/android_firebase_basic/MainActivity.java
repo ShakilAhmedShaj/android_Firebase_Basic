@@ -3,6 +3,7 @@ package com.t3ch.shaj.android_firebase_basic;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -12,6 +13,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -29,11 +32,32 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         database = FirebaseDatabase.getInstance();
+        myRef = database.getReference();
 
         nameInput = findViewById(R.id.nameTextID);
         idInput = findViewById(R.id.idTextID);
-
         textView = findViewById(R.id.TV_ID);
+
+
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                Map<String, String> map = (Map<String, String>) dataSnapshot.getValue();
+
+                String name = map.get("Name");
+                String id = map.get("ID");
+
+                Log.v("Name", name);
+                Log.v("ID", id);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
 
     }
@@ -42,7 +66,9 @@ public class MainActivity extends AppCompatActivity {
 
 
         String childName = nameInput.getText().toString();
-        myRef = database.getReference("Users").child(childName);
+        //myRef = database.getReference("Users").child(childName);
+
+        myRef = database.getReference();
 
         myRef.child("Name").setValue(nameInput.getText().toString());
         myRef.child("ID").setValue(idInput.getText().toString());
