@@ -30,13 +30,12 @@
         android:text="SEND"
         android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/TV_ID"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="20dp"
-        android:textSize="20dp"
-        android:textStyle="bold" />
+    <ListView
+        android:id="@+id/LV_ID"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+    </ListView>
 
 </LinearLayout>

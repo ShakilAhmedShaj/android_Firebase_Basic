@@ -1,19 +1,24 @@
 package com.t3ch.shaj.android_firebase_basic;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
@@ -22,34 +27,53 @@ public class MainActivity extends AppCompatActivity {
     DatabaseReference myRef;
 
     TextView textView;
-
     EditText nameInput, idInput;
 
+    private ListView listView;
+
+    private ArrayList<String> mUserName = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        database = FirebaseDatabase.getInstance();
-        myRef = database.getReference();
-
         nameInput = findViewById(R.id.nameTextID);
         idInput = findViewById(R.id.idTextID);
-        textView = findViewById(R.id.TV_ID);
+        listView = findViewById(R.id.LV_ID);
 
 
-        myRef.addValueEventListener(new ValueEventListener() {
+        database = FirebaseDatabase.getInstance();
+        myRef = database.getReference("Users");
+
+
+        //adapter
+
+        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, mUserName);
+        listView.setAdapter(arrayAdapter);
+
+        myRef.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-                Map<String, String> map = (Map<String, String>) dataSnapshot.getValue();
+                String value = dataSnapshot.getValue(String.class);
+                mUserName.add(value);
+                arrayAdapter.notifyDataSetChanged();
 
-                String name = map.get("Name");
-                String id = map.get("ID");
+            }
 
-                Log.v("Name", name);
-                Log.v("ID", id);
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
             }
 
